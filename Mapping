@@ -1,6 +1,7 @@
 Mapping de chaque Base de Données :
 
 	*STITCH
+
 		- meddra :
 				{umls_concept_id,meddra_id,kind_of_term,side_effect_name}
 		- meddra_all_indications :
@@ -31,7 +32,7 @@ Mapping de chaque Base de Données :
 	created_by
 	creation_date
 
-HPO annotations
+	*HPO annotations
 
 
     *CouchDB
@@ -45,5 +46,66 @@ HPO annotations
 			}
 		}
 	}
+
+    *Omin.txt
+   
+        {*RECORD*, *FIELD*{ NO, // identifiant
+                            TI, // Description sommaire
+                            TX{ DESCRIPTION,        // on s'en balec
+                                CLINICAL FEATURES, 
+                                INHERITANCE,
+                                PATHOGENESIS,
+                                POPULATION GENETICS
+                                MAPPING,
+                                MOLECULAR GENETICS,
+                                },
+                            SA, // osef
+                            RF, // osef
+                            CS{ HEAD AND NECK {[Eyes],
+                                			   [Mouth],
+                                			   [Head]},
+                                CARDIOVASCULAR {[Heart],
+                                				[Vascular]},
+                                CHEST {[Ribs, sternum, clavicles, and scapulae],
+                                	   [Breasts]},
+                                ABDOMEN {[External features],
+                                		 [Gastrointestinal]},
+                                GENITOURINARY {[Internal genitalia, male],
+                                			   [Internal genitalia, female],
+                                			   [Kidneys],
+                                			   [Ureters],
+                                			   [Bladder]},
+                                SKELETAL {[Pelvis],
+                                		  [Skull],
+                                		  [Limbs],
+                                		  [Hands],
+                                		  [Feet]},
+                                SKIN, NAILS, HAIR {[Skin]},
+                                PRENATAL MANIFESTATIONS {[Amniotic fluid]},
+                                MOLECULAR BASIS,
+                                Growth, 
+                                Head
+                                Hair,
+                                Facies,
+                                Eyes,
+                                Ears,
+                                Mouth,
+                                Neuro,
+                                GU,
+                                Limbs,
+                                Joints,
+                                Skin,
+                                Spine,
+                                Heme,
+                                GI,
+                                Pulmonary,
+                                Thorax,
+                                Vascular,
+                                Misc,
+                                Inheritance,}
+                            CN, 
+                            CD,
+                            ED,
+                                      
 
 
