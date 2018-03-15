@@ -17,3 +17,29 @@ Mapping de chaque Base de Données :
 
 		- meddra_freq :
 				{stitch_compound_id_flat, stitch_compound_id_stereo, umls_concept_id, placebo, frequency, dreq_lower_bound, freq_upper_bound, meddra_concept_type, umls_concept_if_for_meddra_term, side_effect_name}
+
+HPO
+	id : identifiant actuel
+	name : symptome/signe
+	alt_id : ancien identifiant
+	def
+	opacity
+	synonym : synonyme du symptome, utilisable dans une autre DB
+	xref
+	is_a : renvoi à d'autres id pour trouver des symptomes/signes proches
+	created_by
+	creation_date
+
+HPO annotations
+
+
+CouchDB
+	{id,key,value:
+		{rev}
+	,doc:
+		{id, rev,root:
+			{Name,Id,ClassificationDisease:
+				{Name,Id,count} #c'est pour chaque maladie
+			}
+		}
+	}
