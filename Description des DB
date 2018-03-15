@@ -10,7 +10,27 @@ HPO
 	created_by
 	creation_date
 
+
+
 HPO annotations
+# HPO Annotations contient des associations entre les identifiants des signes et symptômes de HPO
+et les maladies de OrphaData et OMIM.
+
+disease_db 
+disease_id
+disease_label
+col_4 : adjectif caractérisant la maladie/symptomes
+sign_id
+disease_db_and_id
+col_7 : 
+col_8 : HP : 7 chiffres
+col_9 : HP : 7 chiffres
+col_10 : inutile (entièrement vide)
+col_11 : lettre unique en majuscule (à chercher) : I, M, C, O
+col_12 : localisation de la mutation sur le chromosome et gene
+col_13 : dates
+col_14 : source ?
+
 
 
 CouchDB
@@ -24,10 +44,42 @@ CouchDB
 		}
 	}
 
-	
-	
-	
-	
+
+
+ATC : br09303
+
+# ne pas utiliser : utiliser les codes associées à chaque medoc ou autre élément de l'arborescence
+
+A     CODE_CLASSIFICATION_GENERALE   NOM_CLASSIFICATION_GENERALE
+B     CODE_SOUS_CLASSIFICATION       NOM_SOUS_CLASSIFICATION
+C       CODE_SOUS_SOUS_CLASSIFICATION   NOM_SOUS_SOUS_CLASSIFICATION
+D         code_famille_medicaments         nom_famille_medicaments
+E           code_sous_famille_medicaments     nom_sous_famille_medicaments 
+F             code_medicaments                   nom_medicaments
+
+Exemples :
+   
+AA ALIMENTARY TRACT AND METABOLISM
+B  A01 STOMATOLOGICAL PREPARATIONS
+C    A01A STOMATOLOGICAL PREPARATIONS
+D      A01AA Caries prophylactic agents
+E        A01AA01 Sodium fluoride
+F          D00943  Sodium fluoride (JAN/USP)
+E        A01AA02 Sodium monofluorophosphate
+F          D05864  Sodium monofluorophosphate (USP)
+
+AM MUSCULO-SKELETAL SYSTEM
+B  M01 ANTIINFLAMMATORY AND ANTIRHEUMATIC PRODUCTS
+C    M01A ANTIINFLAMMATORY AND ANTIRHEUMATIC PRODUCTS, NON-STEROIDS
+D      M01AA Butylpyrazolidines
+E        M01AA01 Phenylbutazone [DG:DG00745]
+F          D00510  Phenylbutazone (JP17/USP/INN)
+F          D08363  Phenylbutazone calcium
+F          D08364  Phenylbutazone sodium
+E        M01AA02 Mofebutazone
+
+
+
 	
 	
 	
