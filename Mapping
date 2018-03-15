@@ -1,0 +1,19 @@
+Mapping de chaque Base de Données :
+
+	*STITCH
+		- meddra :
+				{umls_concept_id,meddra_id,kind_of_term,side_effect_name}
+		- meddra_all_indications :
+				{stitch_compound_id_flat,umls_concept_id, detection_method, concept_name, meddra_concept_type, ulms_concept_id_for_meddra_term, meddra_concept_name}
+
+		- meddra_all_label_indications :
+				{source_label, stitch_compound_id_flat, stitch_compound_id_stereo, ulms_concept_id, detection_method, concept_name, meddra_concept_type, ulms_concept_id_for_meddra_term,meddra_concept_name}
+
+		- meddra_all_label_se:
+				{source_label, stitch-compound_id_flat, stitch_compound_id_stereo, ulms_concept_id, meddra_concept_type, umls_concept_id_for_meddra_term, side_effect_name}
+
+		- meddra_all_se :
+				{stitch_compound_id_flat, stitch_compound_id_stereo, umls_concept_id, meddra_concept_type, umls_concept_id_for_meddra_term, side_effect_name}
+
+		- meddra_freq :
+				{stitch_compound_id_flat, stitch_compound_id_stereo, umls_concept_id, placebo, frequency, dreq_lower_bound, freq_upper_bound, meddra_concept_type, umls_concept_if_for_meddra_term, side_effect_name}
