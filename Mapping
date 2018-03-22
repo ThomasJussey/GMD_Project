@@ -32,7 +32,7 @@ Mapping de chaque Base de Données :
 	created_by
 	creation_date
 
-	*HPO annotations
+	* HPO annotations
 
 
     *CouchDB
@@ -107,5 +107,111 @@ Mapping de chaque Base de Données :
                             CD,
                             ED,
                                       
+
+
+
+    *Drugbank.txt
+
+    	#BEGIN_DRUGCARD //DB00001
+    		# AHFS_Codes 
+    		# ATC_Codes 
+    		# Absorption
+    		# Biotransformation
+    		# Brand_Mixtures
+    		# Brand_Names
+    		# CAS_Registry_Number
+    		# ChEBI_ID
+    		# Chemical_Formula
+    		# Chemical_IUPAC_Name
+    		# Chemical-Structure
+    		# Creation_Date
+    		# DPD_Drug_ID_Number
+    		# Description 
+    		# Dosage_Forms
+    		# Drug_Category
+    		# Drug_Interaction
+    		# Drug_References
+    		# Drug_Type
+    		# Experimental_Caco2_Permeability
+    		# Experimental_LogP_Hydrophobicity
+    		# Experimental_Logs
+    		# Experimental_Water_Solubility
+    		# Food_Interactions
+    		# GenBank_ID
+    		# Generic_Name
+    		# HET_ID
+    		# Half_Life
+    		# InChI_Identifier
+    		# InChI_Key
+    		# Indication 		// Ici nom de la maladie
+    		# KEGG_Compound_ID
+    		# KEGG_Drug_ID
+    		# LIMS_Drug_ID
+    		# Mechanism_Of_Action
+    		# Melting_Point
+    		# Molecular_Weight_Avg
+    		# Molecular_Weight_Mono
+    		# Organisms_Affected
+    		# PDB_Experimental_ID
+    		# PDB_Homology_ID
+    		# PDRhealth_Link
+    		# Pathways
+    		# PharmGKB_ID
+    		# Pharmacology
+    		# Predicted_LogP_Hydrophobicity
+    		# Predicted_LogS
+    		# Predicted_Water_Solubility
+    		# Primary_Accession_No
+    		# Protein_Binding
+    		# PubChem_Compound_ID
+    		# PubChem_Substance_ID
+    		# RxList_Link
+    		# Secondary_Accession_No
+    		# Smiles_String_canonical
+    		# Smiles_String_isomeric
+    		# State
+    		# Structure
+    		# SwissProt_ID
+    		# SwissProt_Name
+    		# Synonyms			// pas un truc a faire avec ça ?
+    		# Synthesis_Reference
+    		# Toxicity 			// Ici nom des symptomes
+    		# Update_Date
+    		# Wikipedia_Link
+    		# pKa_Isoelectric_Point
+    		# Drug_Target_1_Cellular_Location				// Pour ce Bloc ( Drug_Target_X_*) multiplicité possible 
+    		# Drug_Target_1_Chromosome_Location				// ex : Drug_Target_1_** ... Drug_Target_9_**
+    		# Drug_Target_1_Drug_References
+    		# Drug_Target_1_Essentiality
+    		# Drug_Target_1_GenAtlas_ID
+    		# Drug_Target_1_GenBank_ID_Gene
+    		# Drug_Target_1_GenBank_ID_Protein
+    		# Drug_Target_1_GeneCard_ID
+    		# Drug_Target_1_Gene_Name
+    		# Drug_Target_1_Gene_Sequence
+    		# Drug_Target_1_General_Function
+    		# Drug_Target_1_General_References
+    		# Drug_Target_1_HGNC_ID
+    		# Drug_Target_1_HPRD_ID
+    		# Drug_Target_1_ID
+    		# Drug_Target_1_Locus
+    		# Drug_Target_1_Molecular_Weight
+    		# Drug_Target_1_Name
+    		# Drug_Target_1_Number_of_Residues
+    		# Drug_Target_1_PDB_ID
+    		# Drug_Target_1_Pathway
+    		# Drug_Target_1_Pfam_Domain_Function
+    		# Drug_Target_1_Protein_Sequence
+    		# Drug_Target_1_Reaction
+    		# Drug_Target_1_Signals
+    		# Drug_Target_1_Specific_Function
+    		# Drug_Target_1_SwissProt_ID
+    		# Drug_Target_1_SwissProt_Name
+    		# Drug_Target_1_Theoretical_pI
+    		# Drug_Target_1_Transmembrane_Regions
+    	#END_DRUGCARD // DB00001
+
+
+
 
 
