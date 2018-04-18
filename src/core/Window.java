@@ -24,6 +24,8 @@ public class Window extends Application {
 
     }
 
+
+
     /**
      * This method close the stage and terminate the execution
      */
