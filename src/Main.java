@@ -9,16 +9,12 @@ public class Main {
 
     public static void main(String args[]){
 
-        /*
-        System.out.println("Je suis incompétent");
+        System.out.println("Init dbm");
         DrugBankMatching drugBank = new DrugBankMatching(".sensibleData/drugbank.xml");
-        System.out.println("Je suis une limace");
-        System.out.println(drugBank.containsDisease("fever"));
-        System.out.println("OMG! Limace évolue en escargot !");
-        */
+        System.out.println("End init dbm");
 
-        Window window = new Window();
-        window.launch();
+        //Window window = new Window();
+        //window.launch();
 
     }
 

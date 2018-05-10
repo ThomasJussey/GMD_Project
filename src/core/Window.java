@@ -29,7 +29,7 @@ public class Window extends Application {
     /**
      * This method close the stage and terminate the execution
      */
-    public void close(){ stage.close(); }
+    //public void close(){ stage.close(); }
 
     /**
      * This method is called by the main and launch the application by starting the "start" function
