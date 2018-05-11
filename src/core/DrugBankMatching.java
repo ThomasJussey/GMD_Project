@@ -99,40 +99,60 @@ public class DrugBankMatching {
                 String toxicity         = "";
 
                 while ((line=br.readLine())!=null){
+
                     // new drug
-                    if(line.startsWith("<name>")){
+                    if(line.startsWith("  <name>")){
+                        //System.out.println(line+" NAME LOOP");
                         String[] fields = line.split("<name>");
-                        System.out.println(fields[1]);
-                        fields = fields[0].split("</name>");
+                        //System.out.println(fields[1]);
+                        fields = fields[1].split("</name>");
+                        //System.out.println(fields[0]);
                         genericName = fields[0];
+                        //System.out.println("Adding of : "+genericName);
+                        //break;
                     }
-                    if(line.startsWith("<indication>")){
+                    if(line.startsWith("  <indication>")){
+                        //System.out.println(line + " INDICATION LOOP");
                         String[] fields = line.split("<indication>");
-                        fields = fields[0].split("</indication>");
+                        //System.out.println(fields[1]);
+                        fields = fields[1].split("</indication>");
+                        //System.out.println(fields[0]);
                         indication = fields[0];
+                        //System.out.println("Adding of : "+indication);
+                        //break;
                     }
-                    if(line.startsWith("<toxicity>")){
+                    if(line.startsWith("  <toxicity>")){
+                        //System.out.println(line +" TOXICITY LOOP");
                         String[] fields = line.split("<toxicity>");
-                        fields = fields[0].split("</toxicity>");
+                        //System.out.println(fields[1]);
+                        fields = fields[1].split("</toxicity>");
+                        //System.out.println(fields[0]);
                         toxicity = fields[0];
+                        //System.out.println("Adding of : "+toxicity);
+                        //break;
                     }
-                    if(line.equals("<synonyms>")){
+                    if(line.equals("  <synonyms>")){
+                        //System.out.println(line + " SYNONYMS LOOP");
                         line = br.readLine();
-                        while(line.startsWith("<synonym ")|| line.startsWith("<synonym>")){
+                        //System.out.println(line + " SYNONYM LOOP");
+                        while(line.startsWith("    <synonym ")|| line.startsWith("    <synonym>")){
                             String[] fields = line.split(">");
+                            //System.out.println(fields[1]);
                             fields = fields[1].split("<");
+                            //System.out.println(fields[0]);
                             synonyms.add(fields[0]);
+                            //System.out.println("Adding of: "+ fields[0]);
                             line = br.readLine();
+                            //System.out.println(line + " SYNONYM LOOP Following");
                         }
+                        //break;
                     }
 
                     if(line.startsWith("</drug>")){
-                        System.out.println("Bonjour");
                         //write the index
                         // make a new, empty document
                         Document doc = new Document();
-                        doc.add(new TextField("Name",   genericName,    Field.Store.YES));
-                        System.out.println(genericName);// indexed and stored
+                        doc.add(new TextField("Name",   genericName,    Field.Store.YES));// indexed and stored
                         doc.add(new TextField("Indication",   indication, 		Field.Store.YES)); // indexed and stored
                         doc.add(new TextField("Toxicity", toxicity, 	Field.Store.YES)); // indexed and stored
                         int n = synonyms.size();
@@ -140,6 +160,7 @@ public class DrugBankMatching {
                         while (i<n){
                             String name = "Synonyms " + i;
                             doc.add(new TextField(name,     synonyms.get(i), 		Field.Store.YES));  // indexed and stored
+                            i=i+1;
                         }
                         //System.out.println(id+" "+genericName);
                         if (writer.getConfig().getOpenMode() == OpenMode.CREATE) {
@@ -168,19 +189,16 @@ public class DrugBankMatching {
     }
 
     /** Simple command-line based search demo. */
-    public static void main(String[] args) throws Exception {
-        String usage = "Usage:\tjava org.apache.lucene.demo.SearchFiles [-index dir] [-field f] [-repeat n] [-queries file] [-query string] [-raw] [-paging hitsPerPage]\n\nSee http://lucene.apache.org/java/4_0/demo.html for details.";
-        if (args.length > 0 && ("-h".equals(args[0]) || "-help".equals(args[0]))) {
-            System.out.println(usage);
-            System.exit(0);
-        }
+    public static ArrayList<String> search(String query1) throws Exception {
+
         String index = "dbmIndex";
         String field = "Name";
         String queries = null;
         int repeat = 0;
         boolean raw = false;
-        String queryString = null;
-        int hitsPerPage = 10;
+        String queryString = query1;
+        int hitsPerPage = 100;
+        ArrayList<String> results = new ArrayList<>();
 
 
         IndexReader reader = DirectoryReader.open(FSDirectory.open(new File(index)));
@@ -210,7 +228,7 @@ public class DrugBankMatching {
                 break;
             }
 
-            Query query = new TermQuery(new Term("Name","Lepirudin"));//parser.parse(line);
+            Query query = /*New TermQuery(new Term("Name","Lepirudin"));*/parser.parse(line);
             System.out.println("Searching for: " + query.toString(field));
 
             if (repeat > 0) {                           // repeat & time as benchmark
@@ -222,13 +240,14 @@ public class DrugBankMatching {
                 System.out.println("Time: "+(end.getTime()-start.getTime())+"ms");
             }
 
-            doPagingSearch(in, searcher, query, hitsPerPage, raw, queries == null && queryString == null);
+            results = doPagingSearch(in, searcher, query, hitsPerPage, raw, queries == null && queryString == null);
 
             if (queryString != null) {
                 break;
             }
         }
         reader.close();
+        return results;
     }
             /**
          139   * This demonstrates a typical paging search scenario, where the search engine presents
@@ -241,10 +260,11 @@ public class DrugBankMatching {
          146   *
          147   */
 
-    public static void doPagingSearch(BufferedReader in, IndexSearcher searcher, Query query, int hitsPerPage, boolean raw, boolean interactive) throws IOException {
+    public static ArrayList<String> doPagingSearch(BufferedReader in, IndexSearcher searcher, Query query, int hitsPerPage, boolean raw, boolean interactive) throws IOException {
         // Collect enough docs to show 5 pages
         TopDocs results = searcher.search(query, 5 * hitsPerPage);
         ScoreDoc[] hits = results.scoreDocs;
+        ArrayList<String> r = new ArrayList<>();
 
         int numTotalHits = results.totalHits;
         System.out.println(numTotalHits + " total matching documents");
@@ -271,18 +291,14 @@ public class DrugBankMatching {
                 }
 
                 Document doc = searcher.doc(hits[i].doc);
-                String path = doc.get("path");
-                if (path != null) {
-                    System.out.println((i+1) + ". " + path);
-                    String title = doc.get("title");
-                    if (title != null) {
-                        System.out.println("   Title: " + doc.get("title"));
-                    }
+                String name = doc.get("Name");
+                if (name != null) {
+                    System.out.println((i+1) + ". " + name);
+                    r.add(name);
                 } else {
-                    System.out.println((i+1) + ". " + "No path for this document");
+                    System.out.println((i+1) + ". " + "No name for this document");
                 }
-
-                }
+            }
 
             if (!interactive || end == 0) {
                 break;
@@ -327,6 +343,17 @@ public class DrugBankMatching {
                 end = Math.min(numTotalHits, start + hitsPerPage);
             }
         }
+        return r;
     }
+
+  public static void main (String[] args){
+        ArrayList<String> results = new ArrayList<>();
+        try {
+            results = search("Toxicity:\"bleeding\"");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+      System.out.println(results.get(0));
+  }
 
 }
