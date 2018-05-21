@@ -17,7 +17,16 @@ import java.util.List;
  */
 public class Window extends Application {
 
+     private DrugBankMatching dbm;
+     private OrphaDataMatching odm;
+     private OMIMMatching omim;
+     private SiderMatching sdm;
+
     public Stage stage;
+
+    public void closeSider(){
+        sdm.closeCon();
+    }
 
     /**
      * The start function starts the application by loading the first scene into the stage, and keeping the controllers active
@@ -32,31 +41,36 @@ public class Window extends Application {
         FXMLLoader loader = new FXMLLoader();
         primaryStage.setTitle("GMD");
         loader.setLocation(getClass().getResource("Window.fxml"));
-        loader.setControllerFactory(iC-> new WindowController(this));
+        WindowController controller = new WindowController(this);
+        loader.setControllerFactory(iC-> controller);
         VBox root = loader.load();
 
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
+
+        controller.setRed();
+        this.dbm = new DrugBankMatching(".sensibleData/drugbank.xml");
+        this.omim = new OMIMMatching(".sensibleData/omim.txt");
+        controller.setGreen();
+    }
+
+    /**
+     * This method will be used to call SymptomToCause
+     * @param request : The user's request
+     * @return The SystemToTreatment's return
+     */
+    public List<String> Q1(String request){
+        return SymptomToCause.SymptomToCause(request, dbm, odm, omim, sdm);
 
     }
 
     /**
      * This method will be used to call SymptomToTreatment
      * @param request : The user's request
-     * @return The SystemToTreatment's return
-     */
-    public List<String> Q1(String request){
-        List<String> ret = new ArrayList<String>();
-        ret.add(request);
-        return ret;
-    }
-
-    /**
-     * This method will be used to call SymptomToCause
-     * @param request : The user's request
      * @return The SystemToCause's return
      */
     public List<String> Q2(String request){
+
         List<String> ret = new ArrayList<String>();
         ret.add(request);
         return ret;

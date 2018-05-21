@@ -1,5 +1,7 @@
 package core;
 
+import java.util.ArrayList;
+
 /**
  * This class correspond to the project's second problematic :
  * "If the sign or symptom can be caused by a disease, find all the drugs that could treat it, and if it is a side effect,
@@ -22,12 +24,27 @@ public class SymptomToTreatment {
      * @param omm is the object used to work on OMIM
      * @param sdm is the object used to work on Sider
      */
-    public SymptomToTreatment(String symptom, int order, int cause, DrugBankMatching dbm, OMIMMatching omm, SiderMatching sdm){
+    public ArrayList<String> SymptomToTreatment(String symptom, int order, int cause, DrugBankMatching dbm, OMIMMatching omm, SiderMatching sdm){
+
+        ArrayList<String> results = new ArrayList<String>();
+
         // Recovering all the datas
+
+        try {
+            String query1 = RequestSplit.RequestSplitLucene(symptom, "Indication");
+            ArrayList<String> dbm_results = dbm.search(query1);
+        } catch (Exception e){
+            System.out.println("Problem while trying to research the databases");
+            e.printStackTrace();
+            results.add("Problem while trying to research the databases");
+
+        }
+
 
         // Merging the datas while exluding the synonyms
 
         // Ordering the datas
 
+        return results;
     }
 }

@@ -48,10 +48,15 @@
             </Button>
          </children>
       </HBox>
-      <ListView fx:id="text_output" opacity="0.75" prefHeight="1000.0" prefWidth="200.0">
+      <ListView fx:id="text_output" prefHeight="1000.0">
          <VBox.margin>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </VBox.margin>
       </ListView>
+      <Button mnemonicParsing="false" onAction="#close_window" text="&gt;&gt;&gt; Quit &lt;&lt;&lt;">
+         <VBox.margin>
+            <Insets bottom="20.0" left="40.0" />
+         </VBox.margin>
+      </Button>
    </children>
 </VBox>

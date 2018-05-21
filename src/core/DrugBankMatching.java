@@ -164,10 +164,10 @@ public class DrugBankMatching {
                         }
                         //System.out.println(id+" "+genericName);
                         if (writer.getConfig().getOpenMode() == OpenMode.CREATE) {
-                            System.out.println("adding " + file);
+                            //System.out.println("adding " + file);
                             writer.addDocument(doc);
                         }else{
-                            System.out.println("updating " + file);
+                            //System.out.println("updating " + file);
                             writer.updateDocument(new Term("path", file.getPath()), doc);
                         }
 
@@ -229,6 +229,7 @@ public class DrugBankMatching {
             }
 
             Query query = /*New TermQuery(new Term("Name","Lepirudin"));*/parser.parse(line);
+            System.out.println(line);
             System.out.println("Searching for: " + query.toString(field));
 
             if (repeat > 0) {                           // repeat & time as benchmark

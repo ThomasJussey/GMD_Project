@@ -136,10 +136,10 @@ public class OMIMMatching {
                         }
                         //System.out.println(id+" "+genericName);
                         if (writer.getConfig().getOpenMode() == IndexWriterConfig.OpenMode.CREATE) {
-                            System.out.println("adding " + file);
+                            //System.out.println("adding " + file);
                             writer.addDocument(doc);
                         }else{
-                            System.out.println("updating " + file);
+                            //System.out.println("updating " + file);
                             writer.updateDocument(new Term("path", file.getPath()), doc);
                         }
 
