@@ -14,12 +14,12 @@ public class Main {
         DrugBankMatching dbm = new DrugBankMatching(".sensibleData/drugbank.xml");
         System.out.println("End init dbm");*/
 
-        System.out.println("Init omim");
+        /*System.out.println("Init omim");
         OMIMMatching omim = new OMIMMatching(".sensibleData/omim.txt");
-        System.out.println("End init omim");
+        System.out.println("End init omim");*/
 
-        //Window window = new Window();
-        //window.launch();
+        Window window = new Window();
+        window.launch();
 
     }
 
