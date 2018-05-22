@@ -51,6 +51,8 @@ public class Window extends Application {
         controller.setRed();
         this.dbm = new DrugBankMatching(".sensibleData/drugbank.xml");
         this.omim = new OMIMMatching(".sensibleData/omim.txt");
+        this.odm = new OrphaDataMatching(".sensibleData/Orpha.json");
+        this.sdm = new SiderMatching();
         controller.setGreen();
     }
 

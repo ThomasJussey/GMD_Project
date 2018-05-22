@@ -116,6 +116,8 @@ public class WindowController {
         deleteDir(file);
         file = new File("omimIndex");
         deleteDir(file);
+        file = new File("odmIndex");
+        deleteDir(file);
         window.closeSider();
 
         window.close();

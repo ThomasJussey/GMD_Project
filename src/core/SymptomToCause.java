@@ -31,13 +31,16 @@ public class SymptomToCause{
 
         ArrayList<String> results = new ArrayList<String>();
 
+
+
         // Recovering all the datas
         try {
             String query1 = RequestSplit.RequestSplitLucene(symptom, "Toxicity");
             ArrayList<String> dbm_results = dbm.search(query1);
             query1 = RequestSplit.RequestSplitLucene(symptom, "Symptom");
             ArrayList<String> omim_results = omim.search(query1);
-            //ArrayList<String> odm_results = odm.search();
+            query1 = RequestSplit.RequestSplitLucene(symptom, "Symptom");
+            ArrayList<String> odm_results = odm.search(query1);
             query1 = RequestSplit.RequestSplitLucene(symptom, "side_effect_name");
             ArrayList<String> sdm_results = sdm.searchFromSymptom(query1);
 
@@ -67,7 +70,13 @@ public class SymptomToCause{
             for (int i = 0 ; i < m; i++){
                 results.add(sdm_results.get(i));
             }
-
+            m = odm_results.size();
+            results.add(" ");
+            results.add("OrphaData's matching : " + m);
+            results.add(" ");
+            for (int i = 0 ; i < m; i++){
+                results.add(odm_results.get(i));
+            }
             return results;
 
         }catch (Exception e){
