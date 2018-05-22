@@ -19,6 +19,21 @@ Mapping de chaque Base de Données :
 		- meddra_freq :
 				{stitch_compound_id_flat, stitch_compound_id_stereo, umls_concept_id, placebo, frequency, dreq_lower_bound, freq_upper_bound, meddra_concept_type, umls_concept_if_for_meddra_term, side_effect_name}
 
+
+*SIDER
+
+		- meddra :
+				{CUI,CONCEPT_TYPE,MEDDRA_ID,LABEL}
+		- meddra_all_indications :
+				{STITCH_COMPOUND_ID	 *	CUI	 *	METHOD_OF_DETECTION	 *	CONCEPT_NAME	 *	MEDDRA_CONCEPT_TYPE	 *	CUI_OF_MEDDRA_TERM	 *	MEDDRA_CONCEPT_NAME	}
+
+		- meddra_all_se :
+				{STITCH_COMPOUND_ID1	 *	STITCH_COMPOUND_ID2	 *	CUI	 *	MEDDRA_CONCEPT_TYPE	 *	CUI_OF_MEDDRA_TERM	 *	SIDE_EFFECT_NAME	 *}
+
+		- meddra_freq :
+				{STITCH_COMPOUND_ID1	 *	STITCH_COMPOUND_ID2	 *	CUI	 *	PLACEBO	 *	FREQUENCY_DESCRIPTION	 *	FREQ_LOWER_BOUND	 *	FREQ_UPPER_BOUND	 *	MEDDRA_CONCEPT_TYPE	 *	MEDDRA_CONCEPT_ID	 *	SIDE_EFFECT_NAME}
+
+
     *HPO
 
 	id : identifiant actuel
