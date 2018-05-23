@@ -82,7 +82,7 @@ public class OMIMONTOMatching {
                     int m = fields.length;
                     for (int i = 0 ; i<m ; i++){
                         Synonyms.add(fields[i]);
-                        System.out.println("Synonyms : " + fields[i]);
+                        //System.out.println("Synonyms : " + fields[i]);
                     }
                     //System.out.println("---------------------------\n");
 

@@ -30,10 +30,43 @@ public class RequestSplit {
         return finalRequest;
     }
 
+    public static ArrayList<String> RequestSplit (String request){
+        ArrayList<String> Symptoms = new ArrayList<>();
+
+        //Splitting " AND " from the request
+        String[] req1 = request.split(" OR ");
+        int n = req1.length;
+
+        String[] req2;
+        //Splitting " OR " from req1
+        for (int i = 0 ; i < n; i++){
+            req2 = req1[i].split(" AND ");
+            int m = req2.length;
+            for ( int j = 0 ; j < m; j++){
+                Symptoms.add(req2[j]);
+            }
+
+        }
+
+        return Symptoms;
+    }
+
+    public static String  ConstructLuceneRequest(ArrayList<String> symptoms, String field){
+        String request=field + ":\"" + symptoms + "\"";
+        int m = symptoms.size();
+        for (int i = 1; i<m ; i++){
+            request=request + " AND " + field + ":\"" + symptoms + "\"";
+        }
+        return request;
+    }
+
     public static void main (String[] args){
-        //String r = "Bonjour AND MANGER OR DORMIR AND MANGER OR MIMA AND KEBAB AND YOLO AND YOLOSWAG\n OR YOLOSWAGDEPOULET OR STOP AND WESH";
-        String r = "bleed*";
-        String r1 = RequestSplitLucene(r, "Toxicity");
-        System.out.println(r1);
+        String r = "Bonjour AND MANGER OR DORMIR AND MANGER OR MIMA AND KEBAB AND YOLO AND YOLOSWAG OR YOLOSWAGDEPOULET OR STOP AND WESH";
+        //String r = "bleed*";
+        ArrayList<String> r1 = RequestSplit(r);
+        int m = r1.size();
+        for (int i = 0; i<m;i++){
+            System.out.println(r1.get(i));
+        }
     }
 }

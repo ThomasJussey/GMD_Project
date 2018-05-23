@@ -120,6 +120,8 @@ public class WindowController {
         deleteDir(file);
         file = new File("ontoIndex");
         deleteDir(file);
+        file = new File("hpoIndex");
+        deleteDir(file);
         window.closeSider();
 
         window.close();

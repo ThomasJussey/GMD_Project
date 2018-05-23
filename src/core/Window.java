@@ -22,6 +22,7 @@ public class Window extends Application {
      private OMIMMatching omim;
      private SiderMatching sdm;
      private OMIMONTOMatching onto;
+     private HPOMatching hpo;
 
     public Stage stage;
 
@@ -55,6 +56,7 @@ public class Window extends Application {
         this.odm = new OrphaDataMatching(".sensibleData/Orpha.json");
         this.sdm = new SiderMatching();
         this.onto = new OMIMONTOMatching(".sensibleData/omim_onto.csv");
+        this.hpo = new HPOMatching(".sensibleData/hp.obo");
         controller.setGreen();
     }
 
@@ -64,7 +66,7 @@ public class Window extends Application {
      * @return The SystemToTreatment's return
      */
     public List<String> Q1(String request){
-        return SymptomToCause.SymptomToCause(request, dbm, odm, omim, sdm);
+        return SymptomToCause.SymptomToCause(request, dbm, odm, omim, sdm, onto, hpo);
 
     }
 

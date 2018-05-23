@@ -226,7 +226,7 @@ Mapping de chaque Base de Données :
     		# Drug_Target_1_Transmembrane_Regions
     	#END_DRUGCARD // DB00001
 
-
+Omin_onto.csv : Class ID,Preferred Label,Synonyms,Definitions,Obsolete,CUI,Semantic Types,Parents
 
 
 
