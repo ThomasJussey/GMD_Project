@@ -77,117 +77,70 @@ public class HPOMatching {
                 String line;
                 //initialization
                 String genericName      = "";
-                String id               = "";
                 String synonym               = "";
-                String xref               = "";
-                ArrayList<String> symptoms = new ArrayList<>();
                 ArrayList<String> synonyms = new ArrayList<>();
-                ArrayList<String> xrefs = new ArrayList<>();
 
 
-                while ((line=br.readLine())!=null){
+
+                while ((line=br.readLine())!=null) {
                     // new drug
-                    if(line.contains("id:")){
-                        //System.out.println("ID LOOP");
 
-                        String[] line_id=id.split(" ");
-                        id=line_id[1];
-
-                        //System.out.println(id);
-                        //break;
-                    }
-                    if(line.contains("name:")){
+                    if (line.startsWith("name:")) {
 
                         //System.out.println("NAME LOOP");
-                        String[] fields = line.split(" ");
+                        String[] fields = line.split("name: ");
+                        //System.out.println(fields[1]);
                         genericName = fields[1];
 
-                        //System.out.println(genericName);
-                        //break;
-                        //genericName = fields[1];
                     }
 
 
-                    if(line.contains("synonym:")){
+                    if (line.startsWith("synonym:")) {
                         //System.out.println("SYMPTOMS LOOP ");
-                        String[] fields = line.split(" ");
-
+                        String[] fields = line.split("synonym: ");
+                        fields = fields[1].split("\"");
+                        //System.out.println(fields[1]);
+                        //break;
                         synonym = fields[1];
                         synonyms.add(synonym);
-                        line=br.readLine();
 
-                        while(line.contains("synonym:")){
-                            fields = line.split(" ");
-
-                            synonym = fields[1];
-                            synonyms.add(synonym);
-
-                            }
-                            line=br.readLine();
-                        }
-                        //break;
-                    if(line.contains("xref:")){
-                        //System.out.println("SYMPTOMS LOOP ");
-                        String[] fields = line.split(" ");
-
-                        xref = fields[1];
-                        xrefs.add(xref);
-                        line=br.readLine();
-
-                        while(line.contains("xref:")){
-                            fields = line.split(" ");
-
-                            xref = fields[1];
-                            xrefs.add(xref);
-
-                        }
-                        line=br.readLine();
                     }
                     //break;
 
-                    }
+                    ;
 
-
-
-                    if(line.startsWith("[Term]")|| line.startsWith("creation_date: 2015-08-07T03:39:28Z")){
+                    //break;
+                    if (line.startsWith("[Term]") || line.startsWith("creation_date: 2015-08-07T03:39:28Z")) {
                         //write the index
                         // make a new, empty document
+                        //System.out.println("MIAM");
                         Document doc = new Document();
-                        doc.add(new TextField("Name",   genericName,    Field.Store.YES));// indexed and stored
-                        doc.add(new TextField("Id",   id,    Field.Store.YES));// indexed and stored
+                        doc.add(new TextField("Name", genericName, Field.Store.YES));// indexed and stored
                         int n = synonyms.size();
-                        int m=synonyms.size();
                         int i = 0;
-                        int j =0;
-
-                        while (i<n){
+                        while (i < n) {
                             String name = "Synonym";
-                            doc.add(new TextField(name,     synonyms.get(i), 		Field.Store.YES));  // indexed and stored
-                            i=i+1;
-                        }
-                        while (j<m){
-                            String name = "xref";
-                            doc.add(new TextField(name,     xrefs.get(j), 		Field.Store.YES));  // indexed and stored
-                            j=j+1;
+                            doc.add(new TextField(name, synonyms.get(i), Field.Store.YES));  // indexed and stored
+                            i = i + 1;
                         }
 
                         //System.out.println(id+" "+genericName);
                         if (writer.getConfig().getOpenMode() == IndexWriterConfig.OpenMode.CREATE) {
                             //System.out.println("adding " + file);
                             writer.addDocument(doc);
-                        }else{
+                        } else {
                             //System.out.println("updating " + file);
                             writer.updateDocument(new Term("path", file.getPath()), doc);
                         }
 
                         eltCount++;
                         //clean values
-                        genericName      = "";
-                        symptoms         = new ArrayList<>();
-                        id               = "";
+                        genericName = "";
+                        synonyms = new ArrayList<>();
+                        synonym = "";
                     }
-                }
 
+                }
                 br.close();
             }
             catch (Exception e){
@@ -197,7 +150,7 @@ public class HPOMatching {
         System.out.println(eltCount + " elts have been added to the index " + System.getProperty("user.dir")+ "/" + INDEX_DIR);
     }
 
-    public static ArrayList<String> search(String query1) throws Exception {
+    public static ArrayList<String> search(String query1, String whatfor) throws Exception {
 
         String index = "hpoIndex";
         String field = "Name";
@@ -248,7 +201,7 @@ public class HPOMatching {
                 System.out.println("Time: "+(end.getTime()-start.getTime())+"ms");
             }
 
-            results = doPagingSearch(in, searcher, query, hitsPerPage, raw, queries == null && queryString == null);
+            results = doPagingSearch(in, searcher, query, hitsPerPage, raw, queries == null && queryString == null, whatfor);
 
             if (queryString != null) {
                 break;
@@ -268,7 +221,7 @@ public class HPOMatching {
      146   *
      147   */
 
-    public static ArrayList<String> doPagingSearch(BufferedReader in, IndexSearcher searcher, Query query, int hitsPerPage, boolean raw, boolean interactive) throws IOException {
+    public static ArrayList<String> doPagingSearch(BufferedReader in, IndexSearcher searcher, Query query, int hitsPerPage, boolean raw, boolean interactive, String whatfor) throws IOException {
         // Collect enough docs to show 5 pages
         TopDocs results = searcher.search(query, 5 * hitsPerPage);
         ScoreDoc[] hits = results.scoreDocs;
@@ -301,14 +254,26 @@ public class HPOMatching {
 
                 Document doc = searcher.doc(hits[i].doc);
 
-                // recuperer indices et faire boucle for
-                String name = doc.get("Synonym");
-                if (name != null) {
-                    System.out.println((i+1) + ". " + name);
-                    r.add(name);
-                } else {
-                    System.out.println((i+1) + ". " + "No name for this document");
+                if (whatfor == "Synonym"){
+                    IndexableField[] field = doc.getFields("Synonym");
+                    //System.out.println(doc.getFields());
+                    int n = field.length;
+                    for (int k =0; k<n;k++){
+                        //System.out.println(field[k].stringValue());
+                        r.add(field[k].stringValue());
+                    }
                 }
+                else {
+                    String name = doc.get(whatfor);
+
+                    if (name != null) {
+                        System.out.println((i + 1) + ". " + name);
+                        r.add(name);
+                    } else {
+                        System.out.println((i + 1) + ". " + "No "+ whatfor+" for this document");
+                    }
+                }
+
             }
 
             if (!interactive || end == 0) {
@@ -359,13 +324,16 @@ public class HPOMatching {
 
     public static void main (String[] args){
         ArrayList<String> results = new ArrayList<>();
-        HPOMatching index = new HPOMatching(".sensibleData/hp.obo");
+        //HPOMatching index = new HPOMatching(".sensibleData/hp.obo");
         try {
-            results = search("Functional abnormality of the bladder");
+            results = search("\"Recurrent urinary tract infections\"", "Synonym");
         }catch (Exception e){
             e.printStackTrace();
         }
-        System.out.println(results.get(0));
+        int m = results.size();
+        for (int i = 0 ;i<m;i++){
+            System.out.println(results.get(i));
+        }
     }
 }
 
