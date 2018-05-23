@@ -118,6 +118,8 @@ public class WindowController {
         deleteDir(file);
         file = new File("odmIndex");
         deleteDir(file);
+        file = new File("ontoIndex");
+        deleteDir(file);
         window.closeSider();
 
         window.close();

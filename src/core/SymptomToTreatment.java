@@ -32,7 +32,7 @@ public class SymptomToTreatment {
 
         try {
             String query1 = RequestSplit.RequestSplitLucene(symptom, "Indication");
-            ArrayList<String> dbm_results = dbm.search(query1);
+            ArrayList<String> dbm_results = dbm.search(query1,"Name");
         } catch (Exception e){
             System.out.println("Problem while trying to research the databases");
             e.printStackTrace();

@@ -21,6 +21,7 @@ public class Window extends Application {
      private OrphaDataMatching odm;
      private OMIMMatching omim;
      private SiderMatching sdm;
+     private OMIMONTOMatching onto;
 
     public Stage stage;
 
@@ -53,6 +54,7 @@ public class Window extends Application {
         this.omim = new OMIMMatching(".sensibleData/omim.txt");
         this.odm = new OrphaDataMatching(".sensibleData/Orpha.json");
         this.sdm = new SiderMatching();
+        this.onto = new OMIMONTOMatching(".sensibleData/omim_onto.csv");
         controller.setGreen();
     }
 

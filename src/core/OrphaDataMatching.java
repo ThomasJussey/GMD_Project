@@ -144,7 +144,7 @@ public class OrphaDataMatching {
     }
 
     /** Simple command-line based search demo. */
-    public static ArrayList<String> search(String query1) throws Exception {
+    public static ArrayList<String> search(String query1, String whatfor) throws Exception {
 
         String index = "odmIndex";
         String field = "Name";
@@ -196,7 +196,7 @@ public class OrphaDataMatching {
                 System.out.println("Time: "+(end.getTime()-start.getTime())+"ms");
             }
 
-            results = doPagingSearch(in, searcher, query, hitsPerPage, raw, queries == null && queryString == null);
+            results = doPagingSearch(in, searcher, query, hitsPerPage, raw, queries == null && queryString == null, whatfor);
 
             if (queryString != null) {
                 break;
@@ -216,7 +216,7 @@ public class OrphaDataMatching {
      146   *
      147   */
 
-    public static ArrayList<String> doPagingSearch(BufferedReader in, IndexSearcher searcher, Query query, int hitsPerPage, boolean raw, boolean interactive) throws IOException {
+    public static ArrayList<String> doPagingSearch(BufferedReader in, IndexSearcher searcher, Query query, int hitsPerPage, boolean raw, boolean interactive, String whatfor) throws IOException {
         // Collect enough docs to show 5 pages
         TopDocs results = searcher.search(query, 5 * hitsPerPage);
         ScoreDoc[] hits = results.scoreDocs;
@@ -247,12 +247,24 @@ public class OrphaDataMatching {
                 }
 
                 Document doc = searcher.doc(hits[i].doc);
-                String name = doc.get("Name");
-                if (name != null) {
-                    System.out.println((i+1) + ". " + name);
-                    r.add(name);
-                } else {
-                    System.out.println((i+1) + ". " + "No name for this document");
+                if (whatfor == "Synonym"){
+                    IndexableField[] field = doc.getFields("Synonym");
+                    //System.out.println(doc.getFields());
+                    int n = field.length;
+                    for (int k =0; k<n;k++){
+                        //System.out.println(field[k].stringValue());
+                        r.add(field[k].stringValue());
+                    }
+                }
+                else {
+                    String name = doc.get(whatfor);
+
+                    if (name != null) {
+                        System.out.println((i + 1) + ". " + name);
+                        r.add(name);
+                    } else {
+                        System.out.println((i + 1) + ". " + "No "+ whatfor+" for this document");
+                    }
                 }
             }
 
@@ -310,7 +322,7 @@ public class OrphaDataMatching {
         OrphaDataMatching odm = new OrphaDataMatching(".sensibleData/Orpha2.json");
         System.out.println("End init odm");
         try{
-            ArrayList<String> results = search("Symptom:\"dry eyes\"");
+            ArrayList<String> results = search("Symptom:\"dry eyes\"", "Name");
         }catch (Exception e){
             e.printStackTrace();
         }
