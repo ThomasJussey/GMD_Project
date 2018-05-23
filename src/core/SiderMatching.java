@@ -3,6 +3,10 @@ package core;
 import java.sql.*;
 import java.util.ArrayList;
 
+/** Réécrire la première requete correctemnt :maddra_all_se.SIDE_EFFECT_NAME -> meddra_all_se.CUI -> meddra.CUI -> meddra.LABEL
+* rename la fonction de requete
+ * faire une deuxieme focntion de requete pour SymptomToTreatment ( je connais aps le chemin dans la base de donnée
+*/
 
 public class SiderMatching {
 
