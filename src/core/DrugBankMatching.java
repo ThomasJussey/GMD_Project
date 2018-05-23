@@ -12,14 +12,12 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.TextField;
-import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.*;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
-import org.apache.lucene.index.Term;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
-import org.apache.lucene.index.IndexWriterConfig;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,8 +28,6 @@ import java.io.BufferedReader;
 import java.util.Date;
 
 
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryparser.classic.QueryParser;
 
 
@@ -158,7 +154,7 @@ public class DrugBankMatching {
                         int n = synonyms.size();
                         int i = 0;
                         while (i<n){
-                            String name = "Synonyms " + i;
+                            String name = "Synonym";
                             doc.add(new TextField(name,     synonyms.get(i), 		Field.Store.YES));  // indexed and stored
                             i=i+1;
                         }
@@ -189,7 +185,7 @@ public class DrugBankMatching {
     }
 
     /** Simple command-line based search demo. */
-    public static ArrayList<String> search(String query1) throws Exception {
+    public static ArrayList<String> search(String query1, String whatfor) throws Exception {
 
         String index = "dbmIndex";
         String field = "Name";
@@ -241,7 +237,7 @@ public class DrugBankMatching {
                 System.out.println("Time: "+(end.getTime()-start.getTime())+"ms");
             }
 
-            results = doPagingSearch(in, searcher, query, hitsPerPage, raw, queries == null && queryString == null);
+            results = doPagingSearch(in, searcher, query, hitsPerPage, raw, queries == null && queryString == null, whatfor);
 
             if (queryString != null) {
                 break;
@@ -261,7 +257,7 @@ public class DrugBankMatching {
          146   *
          147   */
 
-    public static ArrayList<String> doPagingSearch(BufferedReader in, IndexSearcher searcher, Query query, int hitsPerPage, boolean raw, boolean interactive) throws IOException {
+    public static ArrayList<String> doPagingSearch(BufferedReader in, IndexSearcher searcher, Query query, int hitsPerPage, boolean raw, boolean interactive, String whatfor) throws IOException {
         // Collect enough docs to show 5 pages
         TopDocs results = searcher.search(query, 5 * hitsPerPage);
         ScoreDoc[] hits = results.scoreDocs;
@@ -292,12 +288,25 @@ public class DrugBankMatching {
                 }
 
                 Document doc = searcher.doc(hits[i].doc);
-                String name = doc.get("Name");
-                if (name != null) {
-                    System.out.println((i+1) + ". " + name);
-                    r.add(name);
-                } else {
-                    System.out.println((i+1) + ". " + "No name for this document");
+
+                if (whatfor == "Synonym"){
+                    IndexableField[] field = doc.getFields("Synonym");
+                    //System.out.println(doc.getFields());
+                    int n = field.length;
+                    for (int k =0; k<n;k++){
+                        //System.out.println(field[k].stringValue());
+                        r.add(field[k].stringValue());
+                    }
+                }
+                else {
+                    String name = doc.get(whatfor);
+
+                    if (name != null) {
+                        System.out.println((i + 1) + ". " + name);
+                        r.add(name);
+                    } else {
+                        System.out.println((i + 1) + ". " + "No "+ whatfor+" for this document");
+                    }
                 }
             }
 
@@ -349,8 +358,9 @@ public class DrugBankMatching {
 
   public static void main (String[] args){
         ArrayList<String> results = new ArrayList<>();
+        //DrugBankMatching dbm = new DrugBankMatching(".sensibleData/drugbank.xml");
         try {
-            results = search("Toxicity:\"bleeding\"");
+            results = search("Name:\"Heparin\"", "Synonym");
         }catch (Exception e){
             e.printStackTrace();
         }

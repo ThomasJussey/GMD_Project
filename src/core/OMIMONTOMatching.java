@@ -116,7 +116,7 @@ public class OMIMONTOMatching {
         System.out.println(eltCount+" elts have been added to the index " + System.getProperty("user.dir")+ "/" + INDEX_DIR);
     }
 
-    public static ArrayList<String> search(String query1) throws Exception {
+    public static ArrayList<String> search(String query1, String whatfor) throws Exception {
 
         String index = "ontoIndex";
         String field = "Synonym";
@@ -167,7 +167,7 @@ public class OMIMONTOMatching {
                 System.out.println("Time: "+(end.getTime()-start.getTime())+"ms");
             }
 
-            results = doPagingSearch(in, searcher, query, hitsPerPage, raw, queries == null && queryString == null);
+            results = doPagingSearch(in, searcher, query, hitsPerPage, raw, queries == null && queryString == null, whatfor);
 
             if (queryString != null) {
                 break;
@@ -187,7 +187,7 @@ public class OMIMONTOMatching {
      146   *
      147   */
 
-    public static ArrayList<String> doPagingSearch(BufferedReader in, IndexSearcher searcher, Query query, int hitsPerPage, boolean raw, boolean interactive) throws IOException {
+    public static ArrayList<String> doPagingSearch(BufferedReader in, IndexSearcher searcher, Query query, int hitsPerPage, boolean raw, boolean interactive, String whatfor) throws IOException {
         // Collect enough docs to show 5 pages
         TopDocs results = searcher.search(query, 5 * hitsPerPage);
         ScoreDoc[] hits = results.scoreDocs;
@@ -218,18 +218,24 @@ public class OMIMONTOMatching {
                 }
 
                 Document doc = searcher.doc(hits[i].doc);
-                String name = doc.get("Name");
-                if (name != null) {
-                    //System.out.println((i+1) + ". " + name);
-                    String[] fields = name.split(",");
-                    //System.out.println(fields[0]);
-                    if (!r.contains(fields[0])){
-                        r.add(fields[0]);
-                        //System.out.println("ADDING");
+                if (whatfor == "Synonym"){
+                    IndexableField[] field = doc.getFields("Synonym");
+                    System.out.println(doc.getFields());
+                    int n = field.length;
+                    for (int k =0; k<n;k++){
+                        //System.out.println(field[k].stringValue());
+                        r.add(field[k].stringValue());
                     }
+                }
+                else {
+                    String name = doc.get(whatfor);
 
-                } else {
-                    System.out.println((i+1) + ". " + "No name for this document");
+                    if (name != null) {
+                        System.out.println((i + 1) + ". " + name);
+                        r.add(name);
+                    } else {
+                        System.out.println((i + 1) + ". " + "No "+ whatfor+" for this document");
+                    }
                 }
             }
 
@@ -283,7 +289,7 @@ public class OMIMONTOMatching {
         OMIMONTOMatching onto = new OMIMONTOMatching(".sensibleData/omim_onto.csv");
         ArrayList<String> results = new ArrayList<>();
         try {
-            results = search("Name:\"CARTILAGE-HAIR HYPOPLASIA\"");
+            results = search("Name:\"CARTILAGE-HAIR HYPOPLASIA\"","Name");
         }catch (Exception e){
             e.printStackTrace();
         }

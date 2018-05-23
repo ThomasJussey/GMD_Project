@@ -36,11 +36,11 @@ public class SymptomToCause{
         // Recovering all the datas
         try {
             String query1 = RequestSplit.RequestSplitLucene(symptom, "Toxicity");
-            ArrayList<String> dbm_results = dbm.search(query1);
+            ArrayList<String> dbm_results = dbm.search(query1,"Name");
             query1 = RequestSplit.RequestSplitLucene(symptom, "Symptom");
-            ArrayList<String> omim_results = omim.search(query1);
+            ArrayList<String> omim_results = omim.search(query1, "Name");
             query1 = RequestSplit.RequestSplitLucene(symptom, "Symptom");
-            ArrayList<String> odm_results = odm.search(query1);
+            ArrayList<String> odm_results = odm.search(query1,"Name");
             query1 = RequestSplit.RequestSplitLucene(symptom, "side_effect_name");
             ArrayList<String> sdm_results = sdm.searchFromSymptom(query1);
 
