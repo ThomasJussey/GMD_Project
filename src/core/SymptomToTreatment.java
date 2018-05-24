@@ -1,5 +1,7 @@
 package core;
 
+import com.sun.org.apache.regexp.internal.RE;
+
 import java.util.ArrayList;
 
 /**
@@ -70,6 +72,27 @@ public class SymptomToTreatment {
 
                     }
                 }
+
+                results.add(" ");
+                results.add("Sider's matching : " );
+                results.add(" ");
+                for (int j = 0 ; j< n ; j++) {
+                    sdm_results = sdm.searchFromSymptom2(RequestSplit.RequestSplitSQL(hpo_results.get(j),"CONCEPT_NAME"));
+                    //Passage à Stitch
+                    //Passage à ATC
+                    m = sdm_results.size();
+                    for (int i = 0; i < m; i++) {
+                        query1=RequestSplit.RequestSplitLucene(sdm_results.get(i),"Name");
+                        ArrayList<String> stitch_results = stm.search(query1,"ATC");
+                        ArrayList<String> atc_results = ATCMatching.ATCMatching(".sensibleData/br08303.keg", stitch_results);
+                        int s = atc_results.size();
+                        for (int h = 0 ; h< s ; h++) {
+                            if (!results.contains(atc_results.get(h))) {
+                                results.add(atc_results.get(h));
+                            }
+                        }
+                    }
+                }
                 /*
                 results.add(" ");
                 results.add("OMIM's matching : " );
@@ -99,20 +122,6 @@ public class SymptomToTreatment {
                         }
                     }
                 }
-
-                results.add(" ");
-                results.add("Sider's matching : " );
-                results.add(" ");
-                for (int j = 0 ; j< n ; j++) {
-                    sdm_results = sdm.searchFromSymptom(hpo_results.get(j));
-                    m = sdm_results.size();
-
-                    for (int i = 0 ; i < m; i++){
-                        if(!results.contains(sdm_results.get(i))){
-                            results.add(sdm_results.get(i));
-                        }
-                    }
-                }
                 */
 
             }
@@ -131,9 +140,10 @@ public class SymptomToTreatment {
                 ArrayList<String> omim_results = omim.search(query1, "Name");
                 query1 = RequestSplit.RequestSplitLucene(symptom, "Symptom");
                 ArrayList<String> odm_results = odm.search(query1, "Name");
-                query1 = RequestSplit.RequestSplitLucene(symptom, "side_effect_name");
-                ArrayList<String> sdm_results = sdm.searchFromSymptom(query1);
                 */
+                query1 = RequestSplit.RequestSplitSQL(symptom, "CONCEPT_NAME");
+                ArrayList<String> sdm_results = sdm.searchFromSymptom2(query1);
+
 
 
                 // Ordering the datas
@@ -146,6 +156,21 @@ public class SymptomToTreatment {
                     }
 
                 }
+                m = sdm_results.size();
+                results.add(" ");
+                results.add("Sider's matching : " + m);
+                results.add(" ");
+                for (int i = 0; i < m; i++) {
+                    query1=RequestSplit.RequestSplitLucene(sdm_results.get(i),"Name");
+                    ArrayList<String> stitch_results = stm.search(query1,"ATC");
+                    ArrayList<String> atc_results = ATCMatching.ATCMatching(".sensibleData/br08303.keg", stitch_results);
+                    int s = atc_results.size();
+                    for (int h = 0 ; h< s ; h++) {
+                        if (!results.contains(atc_results.get(h))) {
+                            results.add(atc_results.get(h));
+                        }
+                    }
+                }
                 /*
                 m = omim_results.size();
                 results.add(" ");
@@ -154,15 +179,6 @@ public class SymptomToTreatment {
                 for (int i = 0; i < m; i++) {
                     if (!results.contains(omim_results.get(i))) {
                         results.add(omim_results.get(i));
-                    }
-                }
-                m = sdm_results.size();
-                results.add(" ");
-                results.add("Sider's matching : " + m);
-                results.add(" ");
-                for (int i = 0; i < m; i++) {
-                    if (!results.contains(sdm_results.get(i))) {
-                        results.add(sdm_results.get(i));
                     }
                 }
                 m = odm_results.size();

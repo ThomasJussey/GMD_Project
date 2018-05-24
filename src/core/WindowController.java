@@ -139,6 +139,8 @@ public class WindowController {
         deleteDir(file);
         file = new File("hpoIndex");
         deleteDir(file);
+        file = new File("StitchIndex");
+        deleteDir(file);
         window.closeSider();
 
         window.close();

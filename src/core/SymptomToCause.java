@@ -31,6 +31,7 @@ public class SymptomToCause{
                           OMIMMatching omim,
                           SiderMatching sdm,
                           OMIMONTOMatching onto,
+                          StitchMatching stm,
                           HPOMatching hpo) {
 
         ArrayList<String> results = new ArrayList<String>();
@@ -101,17 +102,23 @@ public class SymptomToCause{
                 results.add("Sider's matching : " );
                 results.add(" ");
                 for (int j = 0 ; j< n ; j++) {
-                    sdm_results = sdm.searchFromSymptom(hpo_results.get(j));
+                    sdm_results = sdm.searchFromSymptom(RequestSplit.RequestSplitSQL(hpo_results.get(j),"SIDE_EFFECT_NAME"));
                     m = sdm_results.size();
 
-                    for (int i = 0 ; i < m; i++){
-                        if(!results.contains(sdm_results.get(i))){
-                            results.add(sdm_results.get(i));
+                    query1=RequestSplit.RequestSplitLucene(sdm_results.get(j),"Name");
+                    ArrayList<String> stitch_results = stm.search(query1,"ATC");
+                    ArrayList<String> atc_results = ATCMatching.ATCMatching(".sensibleData/br08303.keg", stitch_results);
+                    int s = atc_results.size();
+                    for (int h = 0 ; h< s ; h++) {
+                        if (!results.contains(atc_results.get(h))) {
+                            results.add(atc_results.get(h));
                         }
                     }
                 }
 
             }
+
+            //Combo request
 
             else {
                 String query1 = RequestSplit.RequestSplitLucene(symptom, "Toxicity");
@@ -120,7 +127,7 @@ public class SymptomToCause{
                 ArrayList<String> omim_results = omim.search(query1, "Name");
                 query1 = RequestSplit.RequestSplitLucene(symptom, "Symptom");
                 ArrayList<String> odm_results = odm.search(query1, "Name");
-                query1 = RequestSplit.RequestSplitLucene(symptom, "side_effect_name");
+                query1 = RequestSplit.RequestSplitSQL(symptom, "SIDE_EFFECT_NAME");
                 ArrayList<String> sdm_results = sdm.searchFromSymptom(query1);
 
 
@@ -143,15 +150,6 @@ public class SymptomToCause{
                         results.add(omim_results.get(i));
                     }
                 }
-                m = sdm_results.size();
-                results.add(" ");
-                results.add("Sider's matching : " + m);
-                results.add(" ");
-                for (int i = 0; i < m; i++) {
-                    if (!results.contains(sdm_results.get(i))) {
-                        results.add(sdm_results.get(i));
-                    }
-                }
                 m = odm_results.size();
                 results.add(" ");
                 results.add("OrphaData's matching : " + m);
@@ -159,6 +157,21 @@ public class SymptomToCause{
                 for (int i = 0; i < m; i++) {
                     if (!results.contains(odm_results.get(i))) {
                         results.add(odm_results.get(i));
+                    }
+                }
+                m = sdm_results.size();
+                results.add(" ");
+                results.add("Sider's matching : " + m);
+                results.add(" ");
+                for (int i = 0; i < m; i++) {
+                    query1=RequestSplit.RequestSplitLucene(sdm_results.get(i),"Name");
+                    ArrayList<String> stitch_results = stm.search(query1,"ATC");
+                    ArrayList<String> atc_results = ATCMatching.ATCMatching(".sensibleData/br08303.keg", stitch_results);
+                    int k = atc_results.size();
+                    for (int h = 0 ; h< k ; h++){
+                        if (!results.contains(atc_results.get(h))) {
+                            results.add(atc_results.get(h));
+                        }
                     }
                 }
             }
