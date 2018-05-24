@@ -329,6 +329,7 @@ public class OMIMMatching {
     }
 
     public static void main (String[] args){
+        OMIMMatching omm = new OMIMMatching(".sensibleData/omim.txt");
         ArrayList<String> results = new ArrayList<>();
         try {
             results = search("Symptom:Arachnodactyly","Name");

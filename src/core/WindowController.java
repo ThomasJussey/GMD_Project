@@ -17,6 +17,7 @@ public class WindowController {
 
     public Window window;
     public List<String> list = new ArrayList<>();
+    public List<String> list2 = new ArrayList<>();
 
     /**
      * Is called first
@@ -100,6 +101,22 @@ public class WindowController {
         text_output.setStyle("-fx-border-color:#FF0000");
         text_output.getItems().clear();
         System.out.println(text_input2.getText());
+
+        /*
+        this.list = this.window.Q1(text_input2.getText());
+        Iterator<String> iterator = list.iterator();
+        while (iterator.hasNext()) {
+            String it = iterator.next();
+            text_output.getItems().add("");
+            text_output.getItems().add("Solution for potential cause :"+it);
+            text_output.getItems().add("");
+            this.list2 = window.Q2(it);
+            Iterator<String> iterator2 = list2.iterator();
+            while (iterator2.hasNext()) {
+                text_output.getItems().add(iterator.next());
+            }
+        }
+        */
 
         this.list = window.Q2(text_input2.getText());
         Iterator<String> iterator = list.iterator();

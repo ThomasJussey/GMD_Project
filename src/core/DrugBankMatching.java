@@ -358,13 +358,13 @@ public class DrugBankMatching {
 
   public static void main (String[] args){
         ArrayList<String> results = new ArrayList<>();
-        //DrugBankMatching dbm = new DrugBankMatching(".sensibleData/drugbank.xml");
+        DrugBankMatching dbm = new DrugBankMatching(".sensibleData/drugbank.xml");
         try {
-            results = search("Name:\"Heparin\"", "Synonym");
+            results = search("Indication:\"Bleeding\"", "Name");
         }catch (Exception e){
             e.printStackTrace();
         }
-      System.out.println(results.get(0));
+      System.out.println(results);
   }
 
 }

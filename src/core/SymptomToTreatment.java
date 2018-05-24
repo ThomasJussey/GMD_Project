@@ -15,21 +15,19 @@ public class SymptomToTreatment {
      * This method will be using all the recquired objects to build the recquired objects. We will need :
      *      - The cause's nature ; if the symptom is caused by a disease, we will search for drugs that could cure it, whereas if the symptom is a side effect,
      *      - The "Indications" from "Drugbank", which correspond to the drugs' indications
-     *      - The symptoms (indicated by the *FIELD* CS beacons) from "OMIM", which correspond to the genetec diseases' symptoms
-     *      - The drugs' side effects from "Sider"
+     *      - The symptoms (indicated by the *FIELD* CS beacons) from "OMIM", which correspond to the genetic diseases' symptoms -> CUI
+     *      - The drugs' indications from "Sider" -> CUI
+     *
      * @param symptom is the symptom of which we want to determine the causes
-     * @param order is the order requested by the user for the datas
-     * @param cause is the nature of the symptom's cause (disease's symptom or drug's side effect)
      * @param dbm is the object used to work on DrugBank
      * @param omm is the object used to work on OMIM
      * @param sdm is the object used to work on Sider
+     * @parem stm is the object used to work on Stitch
      */
-    public ArrayList<String> SymptomToTreatment(String symptom, int order, int cause, DrugBankMatching dbm, OMIMMatching omm, SiderMatching sdm){
+    public static ArrayList<String> SymptomToTreatment(String symptom, DrugBankMatching dbm, OMIMMatching omm, SiderMatching sdm, StitchMatching stm, HPOMatching hpo){
 
         ArrayList<String> results = new ArrayList<String>();
-
-        // Recovering all the datas
-
+        /*
         try {
             String query1 = RequestSplit.RequestSplitLucene(symptom, "Indication");
             ArrayList<String> dbm_results = dbm.search(query1,"Name");
@@ -39,12 +37,155 @@ public class SymptomToTreatment {
             results.add("Problem while trying to research the databases");
 
         }
+        */
+
+        try {
+            ArrayList<String> Symptoms = RequestSplit.RequestSplit(symptom);
+
+            if (Symptoms.size()==1){
+                ArrayList<String> hpo_results = hpo.search("Name:\"" + symptom + "\"","Synonym");
+                hpo_results.add(symptom);
+                int n = hpo_results.size();
+                // Recovering all the datas
+                int k=n-1;
+                results.add("There is (are) : " + k + " synonyms of "+ symptom );
+                results.add(" ");
+                String query1;
+                int m;
+                ArrayList<String> dbm_results;
+                ArrayList<String> omim_results;
+                ArrayList<String> odm_results;
+                ArrayList<String> sdm_results;
+
+                results.add("DRUGBANK's matching ");
+                results.add(" ");
+                for (int j = 0 ; j< n ; j++) {
+                    query1 = RequestSplit.RequestSplitLucene(hpo_results.get(j), "Indication");
+                    dbm_results = dbm.search(query1, "Name");
+                    m = dbm_results.size();
+                    for (int i = 0; i < m; i++) {
+                        if (!results.contains(dbm_results.get(i))) {
+                            results.add(dbm_results.get(i));
+                        }
+
+                    }
+                }
+                /*
+                results.add(" ");
+                results.add("OMIM's matching : " );
+                results.add(" ");
+                for (int j = 0 ; j< n ; j++) {
+                    query1 = RequestSplit.RequestSplitLucene(hpo_results.get(j), "Symptom");
+                    omim_results = omim.search(query1, "Name");
+                    m=omim_results.size();
+                    for (int i = 0; i < m; i++) {
+                        if (!results.contains(omim_results.get(i))) {
+                            results.add(omim_results.get(i));
+                        }
+                    }
+                }
+
+                results.add(" ");
+                results.add("OrphaData's matching : ");
+                results.add(" ");
+                for (int j = 0 ; j< n ; j++) {
+                    query1 = RequestSplit.RequestSplitLucene(hpo_results.get(j), "Symptom");
+                    odm_results = odm.search(query1, "Name");
+                    m = odm_results.size();
+
+                    for (int i = 0 ; i < m; i++){
+                        if(!results.contains(odm_results.get(i))){
+                            results.add(odm_results.get(i));
+                        }
+                    }
+                }
+
+                results.add(" ");
+                results.add("Sider's matching : " );
+                results.add(" ");
+                for (int j = 0 ; j< n ; j++) {
+                    sdm_results = sdm.searchFromSymptom(hpo_results.get(j));
+                    m = sdm_results.size();
+
+                    for (int i = 0 ; i < m; i++){
+                        if(!results.contains(sdm_results.get(i))){
+                            results.add(sdm_results.get(i));
+                        }
+                    }
+                }
+                */
+
+            }
 
 
-        // Merging the datas while exluding the synonyms
+            else {
+                //Getting the diseases
+                //String query1 = RequestSplit.RequestSplitLucene(symptom, "Indication");
+                //ArrayList<String> dbm_results = dbm.search("Indication:\""+query1+"\"", "Name");
+                String query1 = RequestSplit.RequestSplitLucene(symptom, "Indication");
+                ArrayList<String> dbm_results = dbm.search(query1, "Name");
+                /*
+                String query1 = RequestSplit.RequestSplitLucene(symptom, "Toxicity");
+                ArrayList<String> dbm_results = dbm.search(query1, "Name");
+                query1 = RequestSplit.RequestSplitLucene(symptom, "Symptom");
+                ArrayList<String> omim_results = omim.search(query1, "Name");
+                query1 = RequestSplit.RequestSplitLucene(symptom, "Symptom");
+                ArrayList<String> odm_results = odm.search(query1, "Name");
+                query1 = RequestSplit.RequestSplitLucene(symptom, "side_effect_name");
+                ArrayList<String> sdm_results = sdm.searchFromSymptom(query1);
+                */
 
-        // Ordering the datas
 
-        return results;
+                // Ordering the datas
+                int m = dbm_results.size();
+                results.add("DRUGBANK's matching : " + m);
+                results.add(" ");
+                for (int i = 0; i < m; i++) {
+                    if (!results.contains(dbm_results.get(i))) {
+                        results.add(dbm_results.get(i));
+                    }
+
+                }
+                /*
+                m = omim_results.size();
+                results.add(" ");
+                results.add("OMIM's matching : " + m);
+                results.add(" ");
+                for (int i = 0; i < m; i++) {
+                    if (!results.contains(omim_results.get(i))) {
+                        results.add(omim_results.get(i));
+                    }
+                }
+                m = sdm_results.size();
+                results.add(" ");
+                results.add("Sider's matching : " + m);
+                results.add(" ");
+                for (int i = 0; i < m; i++) {
+                    if (!results.contains(sdm_results.get(i))) {
+                        results.add(sdm_results.get(i));
+                    }
+                }
+                m = odm_results.size();
+                results.add(" ");
+                results.add("OrphaData's matching : " + m);
+                results.add(" ");
+                for (int i = 0; i < m; i++) {
+                    if (!results.contains(odm_results.get(i))) {
+                        results.add(odm_results.get(i));
+                    }
+                }
+                */
+            }
+            return results;
+
+        }catch (Exception e){
+            System.out.println("Problem while trying to research the databases");
+            e.printStackTrace();
+            results.add("Problem while trying to research the databases");
+            return results;
+        }
+
+
+        //return results;
     }
 }

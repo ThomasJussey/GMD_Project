@@ -23,6 +23,7 @@ public class Window extends Application {
      private SiderMatching sdm;
      private OMIMONTOMatching onto;
      private HPOMatching hpo;
+     private StitchMatching stm;
 
     public Stage stage;
 
@@ -67,7 +68,6 @@ public class Window extends Application {
      */
     public List<String> Q1(String request){
         return SymptomToCause.SymptomToCause(request, dbm, odm, omim, sdm, onto, hpo);
-
     }
 
     /**
@@ -76,10 +76,7 @@ public class Window extends Application {
      * @return The SystemToCause's return
      */
     public List<String> Q2(String request){
-
-        List<String> ret = new ArrayList<String>();
-        ret.add(request);
-        return ret;
+        return SymptomToTreatment.SymptomToTreatment(request, dbm, omim, sdm, stm, hpo);
     }
 
     /**
